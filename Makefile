@@ -6,4 +6,13 @@ init:
 test:
 	python $(PROJ_NAME)/$(FILE).py
 
-.PHONY: test
+run:
+	python $(PROJ_NAME)/GUI.py
+
+doc:
+	pandoc  doc/Tucil3_13520135.md -o doc/Tucil3_13520135.pdf \
+		--include-in-header doc/header.tex \
+		--highlight-style tango \
+		--pdf-engine=xelatex
+
+.PHONY: test run doc

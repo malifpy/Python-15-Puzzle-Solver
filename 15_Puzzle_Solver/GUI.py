@@ -6,13 +6,16 @@ import Parser
 
 class GUI:
     def __init__(self, interactive=True):
+        # Inisialisasi Window Utama GUI
         self.window = tk.Tk()
         self.window.title("15 Puzzle")
         self.window.geometry("600x400")
         self.window.resizable(False, False)
 
+        # Tambahin Puzzle
         self.puzzle = PGUI.PuzzleGUI(self.window)
 
+        # Tambah tombol open file
         openButton = tk.Button(
                 self.window,
                 text = "Open File",
@@ -21,6 +24,7 @@ class GUI:
 
         openButton.place(x = 450, y = 25, width = 100)
 
+        # Tambah tombol solve
         solveButton = tk.Button(
                 self.window,
                 text = "Solve",
@@ -29,6 +33,7 @@ class GUI:
 
         solveButton.place(x = 450, y = 60, width = 100)
 
+        # Tambah tombol reset
         resetButton = tk.Button(
                 self.window,
                 text = "Reset",
@@ -43,9 +48,13 @@ class GUI:
     def solve(self):
         if self.puzzle.reachable():
             try:
-                self.puzzle.solve()
+                t, nAwakened = self.puzzle.solve()
+                tk.messagebox.showinfo(
+                    "Solve Completed", 
+                    "Selesai dalam {:.2f} detik dan \
+                    membangkitkan {} simpul".format(t, nAwakened))
             except Exception as err:
-                tk.messagebox.showinfo("Information", err)
+                tk.messagebox.showerror("Error", err)
 
         else:
             tk.messagebox.showinfo("Information", "Puzzle cannot be Solved!")
@@ -56,7 +65,7 @@ class GUI:
             l = Parser.Parser.parse(filename)
             self.load_layout(l)
         except Exception as err:
-            tk.messagebox.showinfo("Information", err)
+            tk.messagebox.showerror("Error", err)
 
     def reset(self):
         self.load_layout([str(i) for i in range(1, 17)])

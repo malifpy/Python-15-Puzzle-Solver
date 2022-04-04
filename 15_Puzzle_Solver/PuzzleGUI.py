@@ -20,6 +20,7 @@ class PuzzleGUI:
         self.is_moving = False
 
     def load_layout(self, layout):
+        # Ngebikin tiap bagian puzzle
         self.canvas.delete("all")
         self.tiles = layout
         for idx, tile in enumerate(layout):
@@ -56,20 +57,22 @@ class PuzzleGUI:
         self.refreshKurang()
 
     def refreshKurang(self):
+        # Hitung ulang nilai KURANG di display
         for tile in self.tiles:
             if tile != '16':
-                # print("kurangTile" + tile)
-                self.canvas.itemconfigure(self.canvas.find_withtag("kurangTile" + tile)[0],
-                        text = self.KURANG(tile))
+                self.canvas.itemconfigure(
+                    self.canvas.find_withtag("kurangTile" + tile)[0],
+                    text = self.KURANG(tile)
+                )
 
     def solve(self):
         ps = PS.PuzzleSolver()
-        sSteps, t, found = ps.solve(self.tiles)
+        sSteps, t, found, nAwakened = ps.solve(self.tiles)
         if not found:
-            raise Exception("Max Check Reached")
+            raise Exception("Time Limit Reached")
         self.arr_move(sSteps)
 
-        return t
+        return t, nAwakened
 
     def str_move(self, move):
         if (move == "Up"):
@@ -86,6 +89,7 @@ class PuzzleGUI:
             self.str_move(el)
 
     def moveRec(self, tag, x, y):
+        # Bergerak sedikit-sedikit supaya terlihat seperti animasi
         newX = x
         if (x > 0):
             self.canvas.move(tag, 5, 0)
@@ -112,6 +116,7 @@ class PuzzleGUI:
         self.refreshKurang()
 
     def swap(self, idx):
+        # Tukar Tile
         tmp = self.tiles[idx]
         self.tiles[idx] = "16"
         self.tiles[self.xIdx] = tmp
@@ -183,9 +188,3 @@ class PuzzleGUI:
 
     def reachable(self):
         return (self.ALL_KURANG() + self.X_val()) % 2 == 0
-
-if __name__ == "__main__":
-    l = ["16", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]
-    g = PuzzleGUI(True)
-    print(g.X_val())
-    g.show()

@@ -11,6 +11,7 @@ class Parser:
         return exists(filename)
 
     def format_check(arr):
+        # Pastikan semua file ada
         l = len(arr)
         if(l != 16):
             return False
